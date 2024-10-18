@@ -1,0 +1,119 @@
+diff --git a/meson.build b/meson.build
+index ee064a00e..32a6f1ed5 100644
+--- a/meson.build
++++ b/meson.build
+@@ -102,45 +102,58 @@ check_funcs = [
+ 
+ m_dep = cpp.find_library('m', required: false)
+ 
+-if meson.version().version_compare('>=0.60.0')
+-  # Sadly, FreeType's versioning schemes are different between pkg-config and CMake
+-  # pkg-config: freetype2, cmake: Freetype
+-  freetype_dep = dependency('freetype2',
+-                            version: freetype_min_version,
+-                            method: 'pkg-config',
+-                            required: false,
+-                            allow_fallback: false)
+-  if not freetype_dep.found()
+-    freetype_dep = dependency('FreeType',
+-                              version: freetype_min_version_actual,
+-                              method: 'cmake',
+-                              required: get_option('freetype'),
+-                              default_options: ['harfbuzz=disabled'],
+-                              allow_fallback: true)
+-  endif
++if get_option('freetype_includes') != '' or get_option('freetype_libpath') != ''
++  freetype_dep = declare_dependency(
++    dependencies: cpp.find_library(
++      'freetype',
++      dirs: [join_paths(meson.current_source_dir(), get_option('freetype_libpath'))],
++      has_headers: ['ft2build.h'],
++      header_include_directories: include_directories(join_paths(get_option('freetype_includes'))),
++      required: get_option('freetype')
++    ),
++    include_directories: include_directories(get_option('freetype_includes')),
++  )
+ else
+-  # painful hack to handle multiple dependencies but also respect options
+-  freetype_opt = get_option('freetype')
+-  # we want to handle enabled manually after fallbacks, but also handle disabled normally
+-  if freetype_opt.enabled()
+-    freetype_opt = false
+-  endif
+-  # try pkg-config name
+-  freetype_dep = dependency('freetype2', version: freetype_min_version, method: 'pkg-config', required: freetype_opt)
+-  # when disabled, leave it not-found
+-  if not freetype_dep.found() and not get_option('freetype').disabled()
+-    # Try cmake name
+-    freetype_dep = dependency('Freetype', version: freetype_min_version_actual, method: 'cmake', required: false)
+-    # Subproject fallback, `allow_fallback: true` means the fallback will be
+-    # tried even if the freetype option is set to `auto`.
++  if meson.version().version_compare('>=0.60.0')
++    # Sadly, FreeType's versioning schemes are different between pkg-config and CMake
++    # pkg-config: freetype2, cmake: Freetype
++    freetype_dep = dependency('freetype2',
++                              version: freetype_min_version,
++                              method: 'pkg-config',
++                              required: false,
++                              allow_fallback: false)
+     if not freetype_dep.found()
+-      freetype_dep = dependency('freetype2',
+-                                version: freetype_min_version,
+-                                method: 'pkg-config',
++      freetype_dep = dependency('FreeType',
++                                version: freetype_min_version_actual,
++                                method: 'cmake',
+                                 required: get_option('freetype'),
+                                 default_options: ['harfbuzz=disabled'],
+                                 allow_fallback: true)
+     endif
++  else
++    # painful hack to handle multiple dependencies but also respect options
++    freetype_opt = get_option('freetype')
++    # we want to handle enabled manually after fallbacks, but also handle disabled normally
++    if freetype_opt.enabled()
++      freetype_opt = false
++    endif
++    # try pkg-config name
++    freetype_dep = dependency('freetype2', version: freetype_min_version, method: 'pkg-config', required: freetype_opt)
++    # when disabled, leave it not-found
++    if not freetype_dep.found() and not get_option('freetype').disabled()
++      # Try cmake name
++      freetype_dep = dependency('Freetype', version: freetype_min_version_actual, method: 'cmake', required: false)
++      # Subproject fallback, `allow_fallback: true` means the fallback will be
++      # tried even if the freetype option is set to `auto`.
++      if not freetype_dep.found()
++        freetype_dep = dependency('freetype2',
++                                  version: freetype_min_version,
++                                  method: 'pkg-config',
++                                  required: get_option('freetype'),
++                                  default_options: ['harfbuzz=disabled'],
++                                  allow_fallback: true)
++      endif
++    endif
+   endif
+ endif
+ 
+@@ -366,7 +379,7 @@ endif
+ 
+ # threads
+ thread_dep = null_dep
+-if host_machine.system() != 'windows'
++if host_machine.system() != 'windows' and host_machine.system() != 'bare-metal'
+   thread_dep = dependency('threads', required: false)
+ 
+   if thread_dep.found()
+diff --git a/meson_options.txt b/meson_options.txt
+index c53cf45fc..021ed9374 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -52,3 +52,9 @@ option('fuzzer_ldflags', type: 'string',
+ # Install directory options
+ option('cmakepackagedir', type: 'string',
+   description: 'CMake package configuration install directory')
++
++# Include path options
++option('freetype_includes', type : 'string',
++  description : 'Path to FreeType include directory (which must contain ft2build.h)')
++option('freetype_libpath', type : 'string',
++  description : 'Path to FreeType library directory (which must contain libfreetype.a)')
