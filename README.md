@@ -1,7 +1,7 @@
 
 # Overview
 
-MicroEJ C Component: `harfbuzz`, a patched version of Harfbuzz 10.0.1.
+MicroEJ C Module: `harfbuzz`, a patched version of Harfbuzz 10.0.1.
 
 This module provides the source code of the text-shaping library [HarfBuzz](https://github.com/harfbuzz/harfbuzz), as well as support files to integrate it in the BSP.
 
@@ -9,7 +9,7 @@ This module provides the source code of the text-shaping library [HarfBuzz](http
 
 Add the following line to your `module.ivy`:
 
-    <dependency org="com.microej.clibrary.thirdparty" name="harfbuzz" rev="3.0.0"/>
+    <dependency org="com.microej.clibrary.thirdparty" name="harfbuzz" rev="3.0.1"/>
 
 ## Building HarfBuzz
 
@@ -18,7 +18,15 @@ The directory `thirdparty/harfbuzz` contains the source code of HarfBuzz with th
 The applied patch can be consulted in the file `harfbuzz_support/lib/meson.patch`.
 
 This module provides build scripts to build the library.
-As HarfBuzz depends on the Meson build system, you must first install Meson using either the package manager for your distribution, or by using the Python package manager by running `pip install meson`.
+As HarfBuzz depends on the Meson build system, you must first [install Meson and its dependencies](https://mesonbuild.com/Getting-meson.html).
+Make sure the `meson` command is available in your shell.
+
+You will also need FreeType to be available to your BSP.
+You will typically do so by adding the [Abstraction Layer for FreeType](https://forge.microej.com/ui/repos/tree/General/microej-developer-repository-release/com/microej/clibrary/thirdparty/freetype) to your VEE Port.
+If you choose to use the Abstraction Layer for FreeType, the header files of FreeType should be located in the directory `thirdparty/freetype/include`, sibling of the directory `thirdparty/harfbuzz`. This is where the build scripts will search first.
+
+If your FreeType headers are located at a different path, you should modify the option `-Dfreetype_includes` in the `build.*` scripts to point to that location, or remove the option altogether to let Meson find the headers from the system locations (typically if FreeType is installed on an OS with a package manager).
+
 Then, in a terminal, go to `harfbuzz_support/lib` and run either `build.bat` or `build.sh` depending on the shell used.
 The file `libharfbuzz.a` will be created in `harfbuzz_support/lib`; you can then link your project against this file.
 
@@ -47,9 +55,9 @@ If you do so, you must not compile `hb-alloc.c` in your project.
 
 # Requirements
 
-* Meson
-* FreeType
-* The GNU ARM toolchain
+* [Meson](https://mesonbuild.com/)
+* [FreeType](https://freetype.org/) (also available [from the Developer Repository](https://forge.microej.com/ui/repos/tree/General/microej-developer-repository-release/com/microej/clibrary/thirdparty/freetype))
+* [The GNU ARM toolchain](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 
 # Dependencies
 
@@ -64,7 +72,7 @@ Fork of Harfbuzz 10.0.1.
 None.
 
 ---
-_Copyright 2022-2024 MicroEJ Corp. This file has been modified and/or created by MicroEJ Corp._
+_Copyright 2022-2025 MicroEJ Corp. This file has been modified and/or created by MicroEJ Corp._
 
 _ This is part of HarfBuzz, a text shaping library._
 

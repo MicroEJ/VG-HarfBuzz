@@ -1,8 +1,8 @@
 diff --git a/meson.build b/meson.build
-index ee064a00e..32a6f1ed5 100644
+index ee064a00e..c8e8f38bb 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -102,45 +102,58 @@ check_funcs = [
+@@ -102,45 +102,49 @@ check_funcs = [
  
  m_dep = cpp.find_library('m', required: false)
  
@@ -22,17 +22,8 @@ index ee064a00e..32a6f1ed5 100644
 -                              default_options: ['harfbuzz=disabled'],
 -                              allow_fallback: true)
 -  endif
-+if get_option('freetype_includes') != '' or get_option('freetype_libpath') != ''
-+  freetype_dep = declare_dependency(
-+    dependencies: cpp.find_library(
-+      'freetype',
-+      dirs: [join_paths(meson.current_source_dir(), get_option('freetype_libpath'))],
-+      has_headers: ['ft2build.h'],
-+      header_include_directories: include_directories(join_paths(get_option('freetype_includes'))),
-+      required: get_option('freetype')
-+    ),
-+    include_directories: include_directories(get_option('freetype_includes')),
-+  )
++if get_option('freetype_includes') != ''
++  freetype_dep = declare_dependency(include_directories: include_directories(get_option('freetype_includes')))
  else
 -  # painful hack to handle multiple dependencies but also respect options
 -  freetype_opt = get_option('freetype')
@@ -94,7 +85,7 @@ index ee064a00e..32a6f1ed5 100644
    endif
  endif
  
-@@ -366,7 +379,7 @@ endif
+@@ -366,7 +370,7 @@ endif
  
  # threads
  thread_dep = null_dep
@@ -104,10 +95,10 @@ index ee064a00e..32a6f1ed5 100644
  
    if thread_dep.found()
 diff --git a/meson_options.txt b/meson_options.txt
-index c53cf45fc..021ed9374 100644
+index c53cf45fc..f4b27c07b 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
-@@ -52,3 +52,9 @@ option('fuzzer_ldflags', type: 'string',
+@@ -52,3 +52,7 @@ option('fuzzer_ldflags', type: 'string',
  # Install directory options
  option('cmakepackagedir', type: 'string',
    description: 'CMake package configuration install directory')
@@ -115,5 +106,3 @@ index c53cf45fc..021ed9374 100644
 +# Include path options
 +option('freetype_includes', type : 'string',
 +  description : 'Path to FreeType include directory (which must contain ft2build.h)')
-+option('freetype_libpath', type : 'string',
-+  description : 'Path to FreeType library directory (which must contain libfreetype.a)')

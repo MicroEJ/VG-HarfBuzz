@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 #
-# Copyright 2024 MicroEJ Corp. This file has been modified and/or created by MicroEJ Corp.
+# Copyright 2024-2025 MicroEJ Corp. This file has been modified and/or created by MicroEJ Corp.
 #
 #    This is part of HarfBuzz, a text shaping library.
 #
@@ -31,8 +31,8 @@ FREETYPE_DIR="../freetype"
 
 meson setup --wipe --cross-file "$CROSS_FILE" \
     -Db_staticpic=false -Db_coverage=false -Dbuildtype=release \
-    -Dcpp_args="-DHB_TINY -DHB_CUSTOM_MALLOC -static-libgcc -mcpu=cortex-m33 -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -D__NEWLIB__ -Wall -fmessage-length=0 -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -specs=nano.specs -fpermissive -fno-pie" \
-    -Dwerror=false -Dtests=disabled -Dutilities=disabled -Ddefault_library=static -Dfreetype=enabled -Dfreetype_includes="$FREETYPE_DIR/include" -Dfreetype_libpath="$FREETYPE_SUPPORT_DIR/lib" \
+    -Dcpp_args="-DHB_TINY -DHB_CUSTOM_MALLOC -static-libgcc -mcpu=cortex-m33 -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -D__NEWLIB__ -Wall -fmessage-length=0 -ffunction-sections -fdata-sections -fno-builtin -specs=nano.specs -fpermissive -fno-pie" \
+    -Dwerror=false -Dtests=disabled -Dutilities=disabled -Ddefault_library=static -Dfreetype=enabled -Dfreetype_includes="$FREETYPE_DIR/include" \
     build
 
 meson compile -C build lib
