@@ -9,7 +9,7 @@ This module provides the source code of the text-shaping library [HarfBuzz](http
 
 Add the following line to your `module.ivy`:
 
-    <dependency org="com.microej.clibrary.thirdparty" name="harfbuzz" rev="3.0.1"/>
+    <dependency org="com.microej.clibrary.thirdparty" name="harfbuzz" rev="4.0.0"/>
 
 ## Building HarfBuzz
 

@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 #
-# Copyright 2024-2025 MicroEJ Corp. This file has been modified and/or created by MicroEJ Corp.
+# Copyright 2024-2026 MicroEJ Corp. This file has been modified and/or created by MicroEJ Corp.
 #
 #    This is part of HarfBuzz, a text shaping library.
 #

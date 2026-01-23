@@ -5,11 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2026-01-23
+
+### Changed 
+
+- Upgrade HarfBuzz from the version 10.0.1 (2024-09-24) to the version 12.3.0 (2025-12-27).
+- Make the C module compatible with the new option configuration of MicroVG C module 8.0.0.
+
 ## [3.0.1] - 2025-06-25
 
 ### Changed
 
-- Remove the -ffreestanding compilation option.
+- Remove the `-ffreestanding` compilation option.
 
 ### Fixed
 
@@ -36,7 +43,7 @@ This C module is compatible with the MicroVG C module [8.0.1-9.0.0].
 
 ### Fixed
 
-- Depend on the CCO MicroVG 8.0.0.
+- Depend on the C Module MicroVG 8.0.0.
 - Fix building when libc and libc++ have spaces in their path.
 
 ## [1.0.2] - 2022-09-09
@@ -59,10 +66,10 @@ This C module is compatible with the MicroVG C module [8.0.1-9.0.0].
 
 ### Added
 
-- CCO creation from Harfbuzz 4.2.1 version.
+- C Module creation from Harfbuzz 4.2.1 version.
 
 ---
-_Copyright 2022-2025 MicroEJ Corp. This file has been modified and/or created by MicroEJ Corp._
+_Copyright 2022-2026 MicroEJ Corp. This file has been modified and/or created by MicroEJ Corp._
 
 _ This is part of HarfBuzz, a text shaping library._
 

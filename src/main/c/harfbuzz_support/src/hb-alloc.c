@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 MicroEJ Corp. This file has been modified and/or created by MicroEJ Corp.
+ * Copyright 2022-2026 MicroEJ Corp. This file has been modified and/or created by MicroEJ Corp.
  *
  *  This is part of HarfBuzz, a text shaping library.
  *
@@ -26,7 +26,7 @@
  * @file
  * @brief MicroEJ Harfbuzz memory allocation functions.
  * @author MicroEJ Developer Team
- * @version 3.0.1
+ * @version 4.0.0
  */
 
 #include <stdlib.h>
@@ -38,7 +38,7 @@
 #include "vg_helper.h"
 #include "vg_configuration.h"
 
-#if defined(VG_FEATURE_FONT_COMPLEX_LAYOUT)
+#if defined VG_FEATURE_FONT_COMPLEX_LAYOUT && (VG_FEATURE_FONT_COMPLEX_LAYOUT == 1)
 
 #define HB_HEAP_SIZE VG_FEATURE_FONT_COMPLEX_LAYOUT_HEAP_SIZE
 

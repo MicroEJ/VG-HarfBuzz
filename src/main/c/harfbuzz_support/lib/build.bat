@@ -1,6 +1,6 @@
 @REM Batch
 @REM
-@REM Copyright 2024-2025 MicroEJ Corp. This file has been modified and/or created by MicroEJ Corp.
+@REM Copyright 2024-2026 MicroEJ Corp. This file has been modified and/or created by MicroEJ Corp.
 @REM
 @REM    This is part of HarfBuzz, a text shaping library.
 @REM
