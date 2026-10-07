@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.3] - 2026-10-07
+
+### Changed
+
+- Describe in the README how to get the HarfBuzz source and apply the Meson patch, for an integration from the GitHub repository.
+- List in the README the boards this C Module is tested on and the MISRA deviations of its support files.
+
+### Fixed
+
+- Fix the MISRA deviations of `hb-alloc.c` to rules 10.4 and 18.4 that cppcheck reports, with no change of behavior.
+
+## [4.0.2] - 2026-10-05
+
+### Changed
+
+- Align the README with the other MicroEJ C modules.
+- Log the HarfBuzz heap through the log macros of the C Module MicroVG 8.0.3, without an empty line after each log.
+
+### Fixed
+
+- Fix the CPU fault raised when shaping complex-layout text on a target that requires aligned memory accesses.
+- Fix the double free and the write through a null pointer that an exhausted HarfBuzz heap caused, and detect an overflowing `calloc` request.
+
+## [4.0.1] - 2026-09-15
+
+### Changed
+
+- Enable the uncrustify and cppcheck checks on the MicroEJ source files.
+
 ## [4.0.0] - 2026-01-23
 
 ### Changed 
@@ -89,4 +118,5 @@ _THE COPYRIGHT HOLDER SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING,_
 _BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND_
 _FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS_
 _ON AN "AS IS" BASIS, AND THE COPYRIGHT HOLDER HAS NO OBLIGATION TO_
-_PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS._
+_PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS._\
+_Build: 7E4D1F7C_

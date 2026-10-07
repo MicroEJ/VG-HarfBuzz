@@ -20,23 +20,30 @@
  * FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS
  * ON AN "AS IS" BASIS, AND THE COPYRIGHT HOLDER HAS NO OBLIGATION TO
  * PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+ *
+ * Build: 7E4D1F7C
  */
 
 /**
  * @file
  * @brief MicroEJ Harfbuzz memory allocation functions.
  * @author MicroEJ Developer Team
- * @version 4.0.0
+ * @version 4.0.3
  */
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "BESTFIT_ALLOCATOR.h"
 
 #include "ui_util.h"
 #include "vg_helper.h"
 #include "vg_configuration.h"
+
+#if defined MICROVG_MONITOR_HEAP && (VG_LOG_INFO_ENABLED == 1)
+VG_LOG_DECLARE_MODULE()
+#endif
 
 #if defined VG_FEATURE_FONT_COMPLEX_LAYOUT && (VG_FEATURE_FONT_COMPLEX_LAYOUT == 1)
 
@@ -56,7 +63,8 @@ static void _initialize(void) {
 	static bool initialized = false;
 
 	if (!initialized) {
-		static uint8_t _hb_heap[HB_HEAP_SIZE];
+		/* The allocator is 32-bit oriented: its heap must start on a word boundary. */
+		static uint32_t _hb_heap[((size_t)HB_HEAP_SIZE + 3u) / 4u];
 
 		BESTFIT_ALLOCATOR_new(&_allocator);
 		BESTFIT_ALLOCATOR_initialize(&_allocator, (uintptr_t)HB_HEAP_START, (uintptr_t)HB_HEAP_END);
@@ -65,7 +73,7 @@ static void _initialize(void) {
 }
 
 static inline size_t get_block_stored_size(void *block) {
-	return (*(((uint32_t *)block) - 1u)) & (~(((uint32_t)1u) << 31));
+	return (((uint32_t *)block)[-1]) & (~(((uint32_t)1u) << 31));
 }
 
 static inline size_t get_block_content_size(void *block) {
@@ -84,16 +92,22 @@ void *hb_malloc_impl(size_t size) {
 #ifdef MICROVG_MONITOR_HEAP
 	if (NULL != ptr) {
 		current_heap_size += get_block_stored_size(ptr);
-		MEJ_LOG_INFO_MICROVG("HB Heap - alloc -> size= %d\n", current_heap_size);
+		VG_LOG_INFO("HB Heap - alloc -> size= %d", current_heap_size);
 	}
 #endif
 	return ptr;
 }
 
 void *hb_calloc_impl(size_t nmemb, size_t size) {
-	size_t bytes = nmemb * size;
-	void *ptr = hb_malloc_impl(bytes);
-	(void)memset(ptr, 0, bytes);
+	void *ptr = NULL;
+
+	if ((0u != size) && (nmemb <= (SIZE_MAX / size))) {
+		size_t bytes = nmemb * size;
+		ptr = hb_malloc_impl(bytes);
+		if (NULL != ptr) {
+			(void)memset(ptr, 0, bytes);
+		}
+	}
 
 	return ptr;
 }
@@ -102,7 +116,7 @@ void hb_free_impl(void *block) {
 	if (block != NULL) {
 #ifdef MICROVG_MONITOR_HEAP
 		current_heap_size -= get_block_stored_size(block);
-		MEJ_LOG_INFO_MICROVG("HB Heap - free -> size= %d\n", current_heap_size);
+		VG_LOG_INFO("HB Heap - free -> size= %d", current_heap_size);
 #endif
 
 		BESTFIT_ALLOCATOR_free(&_allocator, block);
@@ -110,15 +124,18 @@ void hb_free_impl(void *block) {
 }
 
 void *hb_realloc_impl(void *block, size_t size) {
-	void *new_block = hb_malloc_impl(size);
+	void *new_block = NULL;
 
-	if (block != NULL) {
-		if (new_block != NULL) {
+	if ((NULL != block) && (0u == size)) {
+		hb_free_impl(block);
+	} else {
+		new_block = hb_malloc_impl(size);
+
+		if ((NULL != block) && (NULL != new_block)) {
 			const size_t previous_size = get_block_content_size(block);
 			(void)memcpy(new_block, block, MIN(size, previous_size));
+			hb_free_impl(block);
 		}
-
-		hb_free_impl(block);
 	}
 
 	return new_block;
