@@ -1,0 +1,3 @@
+[submodule "src/main/c/thirdparty/harfbuzz"]
+	path = src/main/c/thirdparty/harfbuzz
+	url = https://github.com/harfbuzz/harfbuzz.git

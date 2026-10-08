@@ -13,13 +13,13 @@ This C Module is tied to the MicroEJ VG Pack: the versions it is compatible with
    - From the MicroEJ repository: install the `.cco` archive of the version the VEE Port needs, as the [installation guide](https://docs.microej.com/en/latest/VEEPortingGuide/appendix/cmodules.html) describes.
      The archive holds the HarfBuzz source, with the patch of this C Module applied, in `bsp/thirdparty/harfbuzz`, and the support files in `bsp/harfbuzz_support`.
    - From GitHub: add the [GitHub repository](https://github.com/MicroEJ/VG-HarfBuzz) to the BSP of the VEE Port as a git submodule, at the tag of the version the VEE Port needs.
-     The repository holds the support files only, in `<folder>/src/main/c/harfbuzz_support`, where `<folder>` is the folder of the submodule.
-     Get the HarfBuzz source at the tag `12.3.0` in `<folder>/src/main/c/thirdparty/harfbuzz`, the folder the support files expect, then apply the patch of this C Module to it:
+     The repository holds the support files in `<folder>/src/main/c/harfbuzz_support`, where `<folder>` is the folder of the submodule, and the HarfBuzz source as a submodule of its own in `<folder>/src/main/c/thirdparty/harfbuzz`, the folder the support files expect.
+     Initialize that submodule, then apply the patch of this C Module to the HarfBuzz source:
 
      ```sh
      git submodule add https://github.com/MicroEJ/VG-HarfBuzz.git bsp/vee/port/vg/VG-HarfBuzz
      git -C bsp/vee/port/vg/VG-HarfBuzz checkout <version>
-     git clone --branch 12.3.0 https://github.com/harfbuzz/harfbuzz.git bsp/vee/port/vg/VG-HarfBuzz/src/main/c/thirdparty/harfbuzz
+     git -C bsp/vee/port/vg/VG-HarfBuzz submodule update --init --recursive
      git -C bsp/vee/port/vg/VG-HarfBuzz/src/main/c/thirdparty/harfbuzz apply ../../harfbuzz_support/lib/meson.patch
      ```
 

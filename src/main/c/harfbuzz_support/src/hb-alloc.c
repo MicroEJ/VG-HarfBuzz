@@ -28,7 +28,7 @@
  * @file
  * @brief MicroEJ Harfbuzz memory allocation functions.
  * @author MicroEJ Developer Team
- * @version 4.0.3
+ * @version 4.0.4
  */
 
 #include <stdlib.h>
